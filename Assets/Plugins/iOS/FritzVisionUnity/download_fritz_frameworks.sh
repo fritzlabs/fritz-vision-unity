@@ -11,11 +11,10 @@ function downloadFramework() {
 
     echo "Downloading Framework $FRAMEWORK"
     rm ${FRAMEWORK}.zip
-    rm -r $DEST/*
     wget "https://github.com/fritzlabs/swift-framework/releases/download/${SDK_VERSION}/${FRAMEWORK}.zip"
 
     unzip -o ${FRAMEWORK}.zip -d tmp
-    mv tmp/Frameworks/* $DEST
+    cp -R tmp/Frameworks/* $DEST
     rm ${FRAMEWORK}.zip
 }
 
