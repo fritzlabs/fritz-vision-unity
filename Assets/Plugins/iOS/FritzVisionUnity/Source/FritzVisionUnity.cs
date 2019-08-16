@@ -77,11 +77,7 @@ public class FritzPoseManager
     }
 
     #endregion
-
-
-
 }
-
 
 
 public class FritzVisionUnity : MonoBehaviour
