@@ -165,9 +165,4 @@ public class FritzVisionUnity : MonoBehaviour
         }
 
     }
-
-    unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
-    {
-        Debug.Log("Camera frame recieved");
-    }
 }
