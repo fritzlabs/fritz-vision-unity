@@ -13,4 +13,10 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+typedef struct UnityXRNativeFrame_1
+{
+    int version;
+    void* framePtr;
+} UnityXRNativeFrame_1;
+
 #endif /* FritzVisionUnity_Bridging_Header_h */

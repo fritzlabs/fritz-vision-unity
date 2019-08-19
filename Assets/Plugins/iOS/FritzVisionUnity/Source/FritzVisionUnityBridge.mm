@@ -8,27 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-
+#import "UnityXRNativePtrs.h"
+#import <ARKit/ARKit.h>
 #include "FritzVisionUnity-Swift.h"
 #pragma mark - C interface
 
 extern "C" {
 
-  void _startCamera() {
-    [[FritzVisionUnityPoseModel shared] startCamera];
-  }
-
-  void _stopCamera() {
-    [[FritzVisionUnityPoseModel shared] stopCamera];
-    
-  }
-
   void _configure() {
     [FritzVisionUnity configure];
   }
 
-  char* _getLatestPose() {
-    NSString *returnString = [[FritzVisionUnityPoseModel shared] getLatestEncodedPose];
+  char* _processPose(intptr_t ptr) {
+
+    // In case of invalid buffer ref
+    if (!ptr) return 0;
+
+    UnityXRNativeFrame_1* unityXRFrame = (UnityXRNativeFrame_1*) ptr;
+    ARFrame* frame = (__bridge ARFrame*)unityXRFrame->framePtr;
+
+    CVPixelBufferRef buffer = frame.capturedImage;
+    // Forward message to the swift api
+    NSString *returnString = [[FritzVisionUnityPoseModel shared] processFrameWithBuffer: buffer];
     char* cStringCopy(const char* string);
     return cStringCopy([returnString UTF8String]);
   }
@@ -41,11 +42,10 @@ extern "C" {
     [FritzVisionUnityPoseModel shared].minPoseThreshold = threshold;
   }
 
-
   void _setNumPoses(int poses) {
     [FritzVisionUnityPoseModel shared].numPoses = poses;
   }
-  
+
 }
 
 char* cStringCopy(const char* string){

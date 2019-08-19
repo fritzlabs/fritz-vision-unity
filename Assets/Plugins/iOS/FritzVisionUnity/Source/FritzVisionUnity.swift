@@ -16,7 +16,6 @@ import FritzVisionPoseModel
 @available(iOS 11.0, *)
 @objc public class FritzVisionUnity: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
-
   @objc class func configure() {
     FritzCore.configure()
   }
@@ -41,9 +40,6 @@ import FritzVisionPoseModel
     session.sessionPreset = AVCaptureSession.Preset.vga640x480
     return session
   }()
-
-
-
 
   var queue = DispatchQueue(label: "ai.fritz.fritzvisionunity.posequeue")
 
@@ -72,7 +68,7 @@ import FritzVisionPoseModel
 
 
 @available(iOS 11.0, *)
-@objc public class FritzVisionUnityPoseModel: CameraBase {
+@objc public class FritzVisionUnityPoseModel: NSObject {
 
   var latestPose: FritzVisionPoseResult?
   lazy var poseModel = FritzVisionPoseModel()
@@ -83,26 +79,12 @@ import FritzVisionPoseModel
   @objc var minPoseThreshold = 0.5
   @objc var numPoses = 5
 
-  override public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-    let image = FritzVisionImage(buffer: sampleBuffer)
-    image.metadata = FritzVisionImageMetadata()
-    image.metadata?.orientation = FritzImageOrientation(from: connection)
-
-    let options = FritzVisionPoseModelOptions()
-    options.minPartThreshold = minPartThreshold
-    options.minPoseThreshold = minPoseThreshold
-
-    self.latestPose = try? poseModel.predict(image, options: options)
-  }
-
   @objc func getLatestPoseImage() -> CVPixelBuffer? {
     guard let latestPose = latestPose else { return nil }
     return latestPose.image.toPixelBuffer()
   }
 
-  @objc func getLatestEncodedPose() -> String {
-    guard let latestPose = latestPose else { return "" }
-    let poses = latestPose.decodeMultiplePoses(numPoses: numPoses)
+  func encodedPoses(for poses: [Pose]) -> String {
     let convertedPoses = poses.map { $0.keypoints.map { [Double($0.part.rawValue), $0.position.x, $0.position.y, $0.score] }}
     let jsonEncoder = JSONEncoder()
     if let data = try? jsonEncoder.encode(convertedPoses) {
@@ -111,4 +93,18 @@ import FritzVisionPoseModel
     return ""
   }
 
+  @objc(processFrameWithBuffer:)
+  func processFrame(buffer: CVPixelBuffer) -> String {
+    let image = FritzVisionImage(imageBuffer: buffer)
+    image.metadata = FritzVisionImageMetadata()
+    image.metadata?.orientation = .right
+
+    let options = FritzVisionPoseModelOptions()
+    options.minPartThreshold = minPartThreshold
+    options.minPoseThreshold = minPoseThreshold
+
+    guard let result = try? poseModel.predict(image, options: options) else { return "" }
+    let poses = result.poses(limit: numPoses)
+    return encodedPoses(for: poses)
+  }
 }
