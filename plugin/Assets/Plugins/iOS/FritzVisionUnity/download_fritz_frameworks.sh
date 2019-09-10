@@ -21,5 +21,4 @@ function downloadFramework() {
 mkdir tmp/
 downloadFramework FritzBase
 downloadFramework FritzVisionPoseModel
-downloadFramework FritzVisionRigidPose
 rm -rf tmp/

@@ -129,7 +129,6 @@ import FritzVisionPoseModel
       let result = self.processFrame(buffer: buffer)
       self.processing = false
       DispatchQueue.main.async {
-        print(self.callbackTarget)
         UnitySendMessage(
           self.callbackTarget,
           self.callbackFunctionTarget,
