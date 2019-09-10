@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "UnityInterface.h"
 
 typedef struct UnityXRNativeFrame_1
 {

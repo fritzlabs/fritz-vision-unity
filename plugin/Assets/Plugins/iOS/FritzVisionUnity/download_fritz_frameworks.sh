@@ -2,7 +2,7 @@
 
 # Download sdk to Frameworks folder.
 
-SDK_VERSION=3.7.0-beta.1
+SDK_VERSION=4.0.0-beta.1
 DEST=Frameworks/
 
 
@@ -21,4 +21,5 @@ function downloadFramework() {
 mkdir tmp/
 downloadFramework FritzBase
 downloadFramework FritzVisionPoseModel
+downloadFramework FritzVisionRigidPose
 rm -rf tmp/

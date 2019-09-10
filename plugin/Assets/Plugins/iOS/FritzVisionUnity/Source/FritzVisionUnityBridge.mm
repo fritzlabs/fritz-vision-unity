@@ -30,9 +30,23 @@ extern "C" {
     CVPixelBufferRef buffer = frame.capturedImage;
     // Forward message to the swift api
     NSString *returnString = [[FritzVisionUnityPoseModel shared] processFrameWithBuffer: buffer];
+
     char* cStringCopy(const char* string);
     return cStringCopy([returnString UTF8String]);
   }
+
+void _processPoseAsync(intptr_t ptr) {
+
+  // In case of invalid buffer ref
+  if (!ptr) return;
+
+  UnityXRNativeFrame_1* unityXRFrame = (UnityXRNativeFrame_1*) ptr;
+  ARFrame* frame = (__bridge ARFrame*)unityXRFrame->framePtr;
+
+  CVPixelBufferRef buffer = frame.capturedImage;
+  // Forward message to the swift api
+  [[FritzVisionUnityPoseModel shared] processFrameAsyncWithBuffer: buffer];
+}
 
   void _setMinPartThreshold(float threshold) {
     [FritzVisionUnityPoseModel shared].minPartThreshold = threshold;
@@ -42,8 +56,22 @@ extern "C" {
     [FritzVisionUnityPoseModel shared].minPoseThreshold = threshold;
   }
 
+  void _setCallbackFunctionTarget(char* name) {
+    NSString* callbackFunctionTarget = [NSString stringWithUTF8String:name];
+    [FritzVisionUnityPoseModel shared].callbackFunctionTarget = callbackFunctionTarget;
+  }
+
+  void _setCallbackTarget(char* name) {
+    NSString* callbackTarget = [NSString stringWithUTF8String:name];
+    [FritzVisionUnityPoseModel shared].callbackTarget = callbackTarget;
+  }
+
   void _setNumPoses(int poses) {
     [FritzVisionUnityPoseModel shared].numPoses = poses;
+  }
+
+  bool _processing() {
+    return [FritzVisionUnityPoseModel shared].processing;
   }
 
 }

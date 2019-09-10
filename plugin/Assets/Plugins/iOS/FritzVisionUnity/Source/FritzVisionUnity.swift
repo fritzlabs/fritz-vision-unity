@@ -13,6 +13,7 @@ import UIKit
 import FritzVisionPoseModel
 
 
+
 @available(iOS 11.0, *)
 @objc public class FritzVisionUnity: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -70,22 +71,31 @@ import FritzVisionPoseModel
 @available(iOS 11.0, *)
 @objc public class FritzVisionUnityPoseModel: NSObject {
 
-  var latestPose: FritzVisionPoseResult?
-  lazy var poseModel = FritzVisionPoseModel()
+  var latestPose: FritzVisionPoseResult<HumanSkeleton>?
+  lazy var poseModel = FritzVisionHumanPoseModel()
+
+  @objc public var callbackTarget = "FritzPoseController"
+  @objc public var callbackFunctionTarget = "UpdatePose"
+
+  private let modelQueue = DispatchQueue(label: "ai.fritz.Unity")
 
   @objc static let shared = FritzVisionUnityPoseModel()
 
-  @objc var minPartThreshold = 0.5
-  @objc var minPoseThreshold = 0.5
+  @objc var minPartThreshold = 0.6
+  @objc var minPoseThreshold = 0.3
   @objc var numPoses = 5
+
+  @objc public private(set) var processing = false
+
+  private var retainedBuffer: CVPixelBuffer?
 
   @objc func getLatestPoseImage() -> CVPixelBuffer? {
     guard let latestPose = latestPose else { return nil }
     return latestPose.image.toPixelBuffer()
   }
 
-  func encodedPoses(for poses: [Pose]) -> String {
-    let convertedPoses = poses.map { $0.keypoints.map { [Double($0.part.rawValue), $0.position.x, $0.position.y, $0.score] }}
+  func encodedPoses(for poses: [Pose<HumanSkeleton>]) -> String {
+    let convertedPoses = poses.map { $0.keypoints.map { [Double($0.part.rawValue), Double($0.position.x), Double($0.position.y), Double($0.score)] }}
     let jsonEncoder = JSONEncoder()
     if let data = try? jsonEncoder.encode(convertedPoses) {
       return String(data: data, encoding: .utf8) ?? ""
@@ -106,5 +116,26 @@ import FritzVisionPoseModel
     guard let result = try? poseModel.predict(image, options: options) else { return "" }
     let poses = result.poses(limit: numPoses)
     return encodedPoses(for: poses)
+  }
+
+  @objc(processFrameAsyncWithBuffer:)
+  func processFrameAsync(buffer: CVPixelBuffer) {
+    if processing {
+      return
+    }
+    modelQueue.async {
+      defer { self.retainedBuffer = nil }
+      self.processing = true
+      let result = self.processFrame(buffer: buffer)
+      self.processing = false
+      DispatchQueue.main.async {
+        print(self.callbackTarget)
+        UnitySendMessage(
+          self.callbackTarget,
+          self.callbackFunctionTarget,
+          result
+        )
+      }
+    }
   }
 }
