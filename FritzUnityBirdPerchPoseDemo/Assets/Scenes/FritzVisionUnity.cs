@@ -120,9 +120,6 @@ public class FritzVisionUnity : MonoBehaviour
 		randomPosition.y = randomPosition.y * UnityEngine.Random.Range(-0.5f, 0.5f);
 
 		Debug.LogFormat("{0}", bird);
-		// birdController.BirdGoToTarget(bird, debugPoint);
-
-		// bird.SetActive(true);
 		MoveBirdToPoint(bird, randomPosition);
 		if (trackedObject != null)
 		{
