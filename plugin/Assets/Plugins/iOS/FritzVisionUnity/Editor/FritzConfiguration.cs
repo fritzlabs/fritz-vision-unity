@@ -5,6 +5,10 @@ using UnityEditor;
 // Register a SettingsProvider using IMGUI for the drawing framework:
 static class FritzConfigurationIMGUIRegister
 {
+
+    private static readonly string apiKeyMessage = "To use the Fritz Unity Plugin, you must have a valid Fritz API key for your Bundle ID. Register for a Fritz account below or login to create your app in Fritz";
+    private static readonly string fritzSignup = "https://app.fritz.ai/register?utm_campaign=fritzunity&utm_source=unity";
+    private static readonly string fritzLogin = "https://app.fritz.ai?utm_campaign=fritzunity&utm_source=unity";
     // The settings provider lets us add a Fritz configuration to the Project Settings page.
     [SettingsProvider]
     public static SettingsProvider CreateFritzConfigProvider()
@@ -20,16 +24,28 @@ static class FritzConfigurationIMGUIRegister
             guiHandler = (searchContext) =>
             {
                 var settings = FritzConfiguration.GetSerializedSettings();
-                string bundleID = UnityEditor.PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
-                EditorGUILayout.LabelField("Bundle ID", bundleID);
 
+                EditorGUILayout.HelpBox(apiKeyMessage, MessageType.Info);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Register", GUILayout.Width(60f)))
+                {
+                    Application.OpenURL(fritzSignup);
+                }
+                if (GUILayout.Button("Login", GUILayout.Width(60f)))
+                {
+                    Application.OpenURL(fritzLogin);
+                }
+                GUILayout.EndHorizontal();
+
+                string bundleID = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
+                EditorGUILayout.LabelField("Bundle ID", bundleID);
                 EditorGUILayout.PropertyField(settings.FindProperty("iOSAPIKey"), new GUIContent("Fritz iOS API Key"));
-                EditorGUILayout.HelpBox("", MessageType.Info);
 
                 EditorGUILayout.LabelField("Frameworks", EditorStyles.boldLabel);
+
                 EditorGUILayout.PropertyField(settings.FindProperty("sdkVersion"), new GUIContent("SDK Version"));
 
-                if (GUILayout.Button("Download"))
+                if (GUILayout.Button("Download", GUILayout.Width(80f)))
                 {
                     var sdkVersion = settings.FindProperty("sdkVersion").stringValue;
                     var download = new DownloadFramework(sdkVersion, "FritzBase");
