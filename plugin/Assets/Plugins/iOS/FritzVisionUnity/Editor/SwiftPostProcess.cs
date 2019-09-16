@@ -36,9 +36,6 @@ public static class SwiftPostProcess
             proj.AddBuildProperty(targetGuid, "DEFINES_MODULE", "YES");
             proj.AddBuildProperty(targetGuid, "SWIFT_VERSION", "5.0");
             proj.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
-
-
-
             proj.WriteToFile(projPath);
         }
     }

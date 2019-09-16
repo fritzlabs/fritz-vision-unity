@@ -45,11 +45,10 @@ public class Keypoint
 public class FritzPose
 {
     public List<Keypoint> keypoints;
-
-    int PART_INDEX = 0;
-    int X_POS_INDEX = 1;
-    int Y_POS_INDEX = 2;
-    int CONFIDENCE_INDEX = 3;
+    readonly int PART_INDEX = 0;
+    readonly int X_POS_INDEX = 1;
+    readonly int Y_POS_INDEX = 2;
+    readonly int CONFIDENCE_INDEX = 3;
 
     public FritzPose(List<List<float>> rawPose)
     {
