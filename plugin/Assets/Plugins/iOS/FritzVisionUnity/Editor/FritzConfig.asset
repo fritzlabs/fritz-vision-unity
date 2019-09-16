@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc5b1f78642949d69197e2b95fd78c3, type: 3}
   m_Name: FritzConfig
   m_EditorClassIdentifier: 
-  iOSAppID: f9a134a9cf614834bc72f5def48ce3bd
+  iOSAPIKey: f9a134a9cf614834bc72f5def48ce3bd
   sdkVersion: 4.1.1
   frameworks:
-  - name: FritzCore
   - name: FritzVision
-  - name: CoreMLHelpers
   - name: FritzVisionPoseModel

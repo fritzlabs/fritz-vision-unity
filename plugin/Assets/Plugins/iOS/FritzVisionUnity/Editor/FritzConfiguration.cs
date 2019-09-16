@@ -60,7 +60,7 @@ static class FritzConfigurationIMGUIRegister
                     var element = property.GetArrayElementAtIndex(i);
                     EditorGUILayout.PropertyField(element);
                 }
-
+                settings.ApplyModifiedProperties();
             },
 
             // Populate the search keywords to enable smart search filtering and label highlighting:
