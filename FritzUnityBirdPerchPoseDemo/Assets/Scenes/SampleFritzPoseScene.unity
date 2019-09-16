@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CameraManager: {fileID: 645157113}
   m_Cam: {fileID: 645157111}
-  trackedObject: {fileID: 0}
+  trackedObject: {fileID: 883157657}
   trackedPart: 5
   birdController: {fileID: 1086964779}
   bird: {fileID: 1244684345}

@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using UnityEditor.Build.Player;
-
-
 using System.IO;
-using System.Linq;
 
 public static class FritzInfoPostProcess
 {
@@ -32,7 +26,7 @@ public static class FritzInfoPostProcess
 
         // TODO: Pull out API Key specification here, until then, set configuration in Source/Fritz-Info.plist file.
         FritzConfiguration config = FritzConfiguration.GetOrCreateSettings();
-        plist.root.SetString("apiKey", config.iOSAppID);
+        plist.root.SetString("apiKey", config.iOSAPIKey);
         File.WriteAllText(xcodePath, plist.WriteToString());
 
         var projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";

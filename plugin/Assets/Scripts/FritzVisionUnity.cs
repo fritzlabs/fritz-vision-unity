@@ -10,88 +10,86 @@ using UnityEngine.XR.ARSubsystems;
 public class FritzVisionUnity : MonoBehaviour
 {
 
-	[SerializeField]
-	[Tooltip("The ARCameraManager which will produce frame events.")]
-	ARCameraManager m_CameraManager;
+    [SerializeField]
+    [Tooltip("The ARCameraManager which will produce frame events.")]
+    ARCameraManager m_CameraManager;
 
-	public ARCameraManager cameraManager
-	{
-		get => m_CameraManager;
-		set => m_CameraManager = value;
-	}
+    public ARCameraManager cameraManager
+    {
+        get => m_CameraManager;
+        set => m_CameraManager = value;
+    }
 
-	[SerializeField]
-	Camera m_Cam;
+    [SerializeField]
+    Camera m_Cam;
 
-	[SerializeField]
-	GameObject trackedObject;
+    [SerializeField]
+    GameObject trackedObject;
 
-	[SerializeField]
-	FritzPoseParts trackedPart;
+    [SerializeField]
+    FritzPoseParts trackedPart;
 
-	[SerializeField]
-	Vector3 debugPoint = new Vector3(0.1f, 0.1f, 3f);
+    [SerializeField]
+    Vector3 debugPoint = new Vector3(0.1f, 0.1f, 3f);
 
-	#region Singleton implementation
+    #region Singleton implementation
 
-	private static FritzVisionUnity _instance;
+    private static FritzVisionUnity _instance;
 
-	public static FritzVisionUnity Instance
-	{
-		get
-		{
-			if (_instance == null)
-			{
-				var obj = new GameObject("FritzPoseUnity");
-				_instance = obj.AddComponent<FritzVisionUnity>();
-			}
+    public static FritzVisionUnity Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                var obj = new GameObject("FritzPoseUnity");
+                _instance = obj.AddComponent<FritzVisionUnity>();
+            }
 
-			return _instance;
-		}
-	}
+            return _instance;
+        }
+    }
 
 
-	#endregion
+    #endregion
 
-	private void Awake()
-	{
-		if (_instance != null)
-		{
-			Destroy(gameObject);
-			return;
-		}
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-		DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
         FritzPoseManager.SetCallbackTarget("FritzPoseController");
         FritzPoseManager.SetCallbackFunctionTarget("UpdatePose");
         FritzPoseManager.Configure();
-		
-		
-	}
+    }
 
     public void UpdatePose(string message)
-	{
-		var poses = FritzPoseManager.ProcessEncodedPoses(message);
+    {
+        var poses = FritzPoseManager.ProcessEncodedPoses(message);
 
-		foreach (FritzPose pose in poses)
-		{
-			var bodyPoint = WorldPointForPart(pose, trackedPart);
+        foreach (FritzPose pose in poses)
+        {
+            var bodyPoint = WorldPointForPart(pose, trackedPart);
 
-			if (trackedObject != null)
-			{
-				trackedObject.transform.position = bodyPoint;
-			}
+            if (trackedObject != null)
+            {
+                trackedObject.transform.position = bodyPoint;
+            }
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 
-	private void Update()
-	{
+    private void Update()
+    {
         if (FritzPoseManager.Processing())
-		{
-			return;
-		}
+        {
+            return;
+        }
 
 #if UNITY_IOS && !UNITY_EDITOR
         var cameraParams = new XRCameraParams
@@ -113,25 +111,25 @@ public class FritzVisionUnity : MonoBehaviour
         FritzPoseManager.ProcessPoseAsync(frame.nativePtr);
 
 #else
-		var randomPosition = debugPoint;
-		randomPosition.x = randomPosition.x * UnityEngine.Random.Range(-0.5f, 0.5f);
-		randomPosition.y = randomPosition.y * UnityEngine.Random.Range(-0.5f, 0.5f);
+        var randomPosition = debugPoint;
+        randomPosition.x = randomPosition.x * UnityEngine.Random.Range(-0.5f, 0.5f);
+        randomPosition.y = randomPosition.y * UnityEngine.Random.Range(-0.5f, 0.5f);
 
-		if (trackedObject != null)
-		{
-			trackedObject.transform.position = randomPosition;
-		}
+        if (trackedObject != null)
+        {
+            trackedObject.transform.position = randomPosition;
+        }
 #endif
-	}
+    }
 
-	Vector3 WorldPointForPart(FritzPose pose, FritzPoseParts posePart)
-	{
-		Keypoint keypoint = pose.keypoints[(int)posePart];
+    Vector3 WorldPointForPart(FritzPose pose, FritzPoseParts posePart)
+    {
+        Keypoint keypoint = pose.keypoints[(int)posePart];
         var x = keypoint.position.x;
-		var y = 1.0f - keypoint.position.y;
+        var y = 1.0f - keypoint.position.y;
 
         var position = new Vector3(x, y, 2f);
         var output = m_Cam.ViewportToWorldPoint(position);
         return output;
-	}
+    }
 }

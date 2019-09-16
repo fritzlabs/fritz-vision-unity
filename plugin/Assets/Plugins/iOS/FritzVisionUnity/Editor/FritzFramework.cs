@@ -1,14 +1,10 @@
-﻿using UnityEngine;
-
-using System.IO;
-using UnityEditor.iOS.Xcode;
-using PlistCS;
+﻿using System.IO;
 using System.Collections.Generic;
 
 [System.Serializable]
 public class FritzFramework
 {
-	public string name;
+    public string name;
 
     public FritzFramework(string name)
     {
@@ -19,10 +15,9 @@ public class FritzFramework
     {
         get
         {
-            
             var frameworkPath = "Assets/Plugins/iOS/FritzVisionUnity/Frameworks";
             var path = Path.Combine(frameworkPath, name + ".framework");
-            
+
             if (!Directory.Exists(path))
             {
                 return null;
@@ -32,11 +27,6 @@ public class FritzFramework
             Dictionary<string, object> plist = (Dictionary<string, object>)PlistCS.Plist.readPlist(infoPath);
 
             return (string)plist["FritzSDKVersion"];
-            // return null;
-            //plist.ReadFromFile(infoPath);
-            // string currentVersion = plist.root["FritzSDKVersion"].AsString();
-            
-            // return currentVersion;
         }
 
     }

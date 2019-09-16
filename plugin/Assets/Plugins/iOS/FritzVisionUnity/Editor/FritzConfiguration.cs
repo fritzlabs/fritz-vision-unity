@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.UIElements;
-
 
 // Register a SettingsProvider using IMGUI for the drawing framework:
 static class FritzConfigurationIMGUIRegister
 {
+    // The settings provider lets us add a Fritz configuration to the Project Settings page.
     [SettingsProvider]
     public static SettingsProvider CreateFritzConfigProvider()
     {
@@ -17,15 +15,15 @@ static class FritzConfigurationIMGUIRegister
         {
             // By default the last token of the path is used as display name if no label is provided.
             label = "Fritz",
+
             // Create the SettingsProvider and initialize its drawing (IMGUI) function in place:
             guiHandler = (searchContext) =>
             {
                 var settings = FritzConfiguration.GetSerializedSettings();
                 string bundleID = UnityEditor.PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
-                EditorGUILayout.LabelField("Bundle IDddd", bundleID);
+                EditorGUILayout.LabelField("Bundle ID", bundleID);
 
-
-                EditorGUILayout.PropertyField(settings.FindProperty("iOSAppID"), new GUIContent("Fritz iOS API Key"));
+                EditorGUILayout.PropertyField(settings.FindProperty("iOSAPIKey"), new GUIContent("Fritz iOS API Key"));
                 EditorGUILayout.HelpBox("", MessageType.Info);
 
                 EditorGUILayout.LabelField("Frameworks", EditorStyles.boldLabel);
@@ -39,41 +37,39 @@ static class FritzConfigurationIMGUIRegister
                     download = new DownloadFramework(sdkVersion, "FritzVisionPoseModel");
                     download.Download();
                 }
+
                 var property = settings.FindProperty("frameworks");
                 for (int i = 0; i < property.arraySize; i++)
                 {
                     var element = property.GetArrayElementAtIndex(i);
-
                     EditorGUILayout.PropertyField(element);
                 }
 
             },
 
             // Populate the search keywords to enable smart search filtering and label highlighting:
-            keywords = new HashSet<string>(new[] { "Number", "Some String" })
+            keywords = new HashSet<string>(new[] { "Pose", "Fritz" })
         };
 
         return provider;
     }
 }
 
-
-public class FritzConfiguration: ScriptableObject
+public class FritzConfiguration : ScriptableObject
 {
     public const string k_FritzConfigurationPath =
         "Assets/Plugins/iOS/FritzVisionUnity/Editor/FritzConfig.asset";
 
     [SerializeField]
-    public string iOSAppID;
+    public string iOSAPIKey;
 
     [SerializeField]
     public string sdkVersion;
 
-    public FritzFramework[] frameworks = 
+    // Required Frameworks
+    public FritzFramework[] frameworks =
     {
-        new FritzFramework("FritzCore"),
         new FritzFramework("FritzVision"),
-        new FritzFramework("CoreMLHelpers"),
         new FritzFramework("FritzVisionPoseModel")
     };
 
@@ -84,7 +80,7 @@ public class FritzConfiguration: ScriptableObject
         {
             settings = ScriptableObject.CreateInstance<FritzConfiguration>();
             settings.sdkVersion = "4.1.1";
-            
+
             AssetDatabase.CreateAsset(settings, k_FritzConfigurationPath);
             AssetDatabase.SaveAssets();
         }
