@@ -14,10 +14,13 @@ public class FrameworkPropertyDrawer : PropertyDrawer
     {
         
         var obj = fieldInfo.GetValue(property.serializedObject.targetObject);
-        // Hacky way of getting path by referring to reference
-        // TODO: This will only work in an array
         var path = property.propertyPath;
-        var index = int.Parse(property.propertyPath.ToCharArray()[path.Length - 2].ToString());
+        // Hacky way of getting path by referring to reference. The object for some reason
+        // Points to the list of frameworks, not the framework itself.
+        // Pull the index from the propertyPath where the index is in the 2nd to last
+        // character.
+        int arrayIndexChar = path.Length - 2;
+        int index = int.Parse(property.propertyPath[arrayIndexChar].ToString());
         
         var frameworks = obj as FritzFramework[];
         var framework = frameworks[index];

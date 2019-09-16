@@ -126,8 +126,8 @@ public class FritzVisionUnity : MonoBehaviour
     {
         Keypoint keypoint = pose.keypoints[(int)posePart];
         var x = keypoint.position.x;
+        // Unity coordinates are (0,0) in bottom left, iOS is (0, 0) top left
         var y = 1.0f - keypoint.position.y;
-
         var position = new Vector3(x, y, 2f);
         var output = m_Cam.ViewportToWorldPoint(position);
         return output;

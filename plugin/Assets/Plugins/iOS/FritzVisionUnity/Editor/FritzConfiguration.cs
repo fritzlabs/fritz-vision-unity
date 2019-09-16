@@ -5,6 +5,8 @@ using UnityEditor;
 // Register a SettingsProvider using IMGUI for the drawing framework:
 static class FritzConfigurationIMGUIRegister
 {
+    private static readonly float smallButtonSize = 60f;
+    private static readonly float mediumButtonSize = 80f;
 
     private static readonly string apiKeyMessage = "To use the Fritz Unity Plugin, you must have a valid Fritz API key for your Bundle ID. Register for a Fritz account below or login to create your app in Fritz";
     private static readonly string fritzSignup = "https://app.fritz.ai/register?utm_campaign=fritzunity&utm_source=unity";
@@ -27,11 +29,11 @@ static class FritzConfigurationIMGUIRegister
 
                 EditorGUILayout.HelpBox(apiKeyMessage, MessageType.Info);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Register", GUILayout.Width(60f)))
+                if (GUILayout.Button("Register", GUILayout.Width(smallButtonSize)))
                 {
                     Application.OpenURL(fritzSignup);
                 }
-                if (GUILayout.Button("Login", GUILayout.Width(60f)))
+                if (GUILayout.Button("Login", GUILayout.Width(smallButtonSize)))
                 {
                     Application.OpenURL(fritzLogin);
                 }
@@ -45,7 +47,7 @@ static class FritzConfigurationIMGUIRegister
 
                 EditorGUILayout.PropertyField(settings.FindProperty("sdkVersion"), new GUIContent("SDK Version"));
 
-                if (GUILayout.Button("Download", GUILayout.Width(80f)))
+                if (GUILayout.Button("Download", GUILayout.Width(mediumButtonSize)))
                 {
                     var sdkVersion = settings.FindProperty("sdkVersion").stringValue;
                     var download = new DownloadFramework(sdkVersion, "FritzBase");
