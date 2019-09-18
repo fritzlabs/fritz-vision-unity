@@ -1,14 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using UnityEditor.Build.Player;
-using System.Diagnostics;
-
-using System.IO;
-using System.Linq;
 
 public static class SwiftPostProcess
 {
@@ -36,9 +28,6 @@ public static class SwiftPostProcess
             proj.AddBuildProperty(targetGuid, "DEFINES_MODULE", "YES");
             proj.AddBuildProperty(targetGuid, "SWIFT_VERSION", "5.0");
             proj.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
-
-
-
             proj.WriteToFile(projPath);
         }
     }
