@@ -3,29 +3,26 @@
 
 ## Installation instructions
 
-1. Download Fritz Frameworks (Make sure to run script from the `FritzVisionUnity/` folder:
+1. Configure Fritz
 
-```
-./download_fritz_frameworks.sh
-```
+  In the Unity project, click Edit -> Project Settings -> Fritz. (If you do not see Fritz, please make sure you imported the plugin correctly).
 
-Check to make sure that the script succeeded. In `Frameworks/` you should see a few Fritz frameworks, including `FritzVision.framework/`, `FritzVisionPoseModel.framework/`.
+  ### Add Fritz API Key
+  Create an app in Fritz that matches your bundle identifier set in Unity. You can change the bundle identifier in the iOS player settings in Unity (Edit -> Project Settings -> Player -> Other Settings).
 
-Note: If you are using Xcode 10, use version 3.7.0. If you are using Xcode 11 Beta 5, use 3.7.0-beta.1.
-
-
-2. Update the `FritzVisionUnity/Source/Fritz-Info.plist` file with your own API Key.
-
-You'll have to create an app in Fritz. Make sure that your bundle identifier matches the app you create. The easiest way is to make sure to set the bundle identifier in the iOS player settings in Unity (pre-iOS build).
-
+  ### Download Fritz Frameworks
+  Click the Download button to download the Fritz Frameworks.
+  
+  Note: If you are using Xcode 10, use version 4.0.1. If you are using Xcode 11 Beta 5, use at least 4.1.0.
+  
 3. Add ARKit Packages
 
-In unity click on Window -> Package Manager. From there, add the ARFoundation and ARKit XR Plugin.
+  In unity click on Window -> Package Manager. From there, add the ARFoundation and ARKit XR Plugin.
 
 3. Configure Unity
 
-You'll need to set a few settings in your Unity Project
+  You'll need to set a few settings in your Unity Project
 
- - Add a Camera Usage Description in Player Settings
- - Change Architecture to Arm64
- - Change Minimum Deployment Version to at least 11.0
+   - Add a Camera Usage Description in Player Settings
+   - Change Architecture to Arm64
+   - Change Minimum Deployment Version to at least 11.0
