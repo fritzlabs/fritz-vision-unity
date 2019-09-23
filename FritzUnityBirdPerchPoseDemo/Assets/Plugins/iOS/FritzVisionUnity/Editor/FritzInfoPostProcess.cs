@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using UnityEditor.Build.Player;
-
-
 using System.IO;
-using System.Linq;
 
 public static class FritzInfoPostProcess
 {
@@ -31,11 +25,8 @@ public static class FritzInfoPostProcess
         plist.ReadFromFile(plistPath);
 
         // TODO: Pull out API Key specification here, until then, set configuration in Source/Fritz-Info.plist file.
-
-        //plist.root.SetString("apiKey", "YOUR API KEY HERE");
-        //plist.root.SetString("apiUrl", "https://api.fritz.ai/sdk/v1");
-        //plist.root.SetString("namespace", "production");
-
+        FritzConfiguration config = FritzConfiguration.GetOrCreateSettings();
+        plist.root.SetString("apiKey", config.iOSAPIKey);
         File.WriteAllText(xcodePath, plist.WriteToString());
 
         var projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";
@@ -48,7 +39,6 @@ public static class FritzInfoPostProcess
         proj.AddFileToBuild(targetGuid, plistGuid);
 
         proj.WriteToFile(projPath);
-
 
         // Update Info with Camera usage description
         string infoPath = Path.Combine(buildPath, "Info.plist");
