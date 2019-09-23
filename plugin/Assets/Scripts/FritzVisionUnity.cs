@@ -5,6 +5,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.Android;
 
 
 public class FritzVisionUnity : MonoBehaviour
@@ -55,6 +56,7 @@ public class FritzVisionUnity : MonoBehaviour
 
     private void Awake()
     {
+      
         if (_instance != null)
         {
             Destroy(gameObject);
@@ -62,14 +64,25 @@ public class FritzVisionUnity : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+        FritzPoseManager.Configure();
         FritzPoseManager.SetCallbackTarget("FritzPoseController");
         FritzPoseManager.SetCallbackFunctionTarget("UpdatePose");
-        FritzPoseManager.Configure();
-    }
+
+  //      if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+		//{
+		//	// The user authorized use of the microphone.
+		//}
+		//else
+		//{
+		//	// We do not have permission to use the microphone.
+		//	// Ask for permission or proceed without the functionality enabled.
+		//	Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+		//}
+	}
 
     public void UpdatePose(string message)
     {
-        var poses = FritzPoseManager.ProcessEncodedPoses(message);
+        List<FritzPose> poses = FritzPoseManager.ProcessEncodedPoses(message);
 
         foreach (FritzPose pose in poses)
         {
@@ -91,25 +104,38 @@ public class FritzVisionUnity : MonoBehaviour
             return;
         }
 
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_ANDROID
+
+		XRCameraImage image;
+		if (!cameraManager.TryGetLatestImage(out image))
+		{
+			image.Dispose();
+			return;
+		}
+
+		FritzPoseManager.ProcessImageAsync(image);
+
+        // You must dispose the CameraImage to avoid resource leaks.
+        image.Dispose();
+
+#elif UNITY_IOS
         var cameraParams = new XRCameraParams
-        {
-            zNear = m_Cam.nearClipPlane,
-            zFar = m_Cam.farClipPlane,
-            screenWidth = Screen.width,
-            screenHeight = Screen.height,
-            screenOrientation = Screen.orientation
-        };
-        
+		{
+			zNear = m_Cam.nearClipPlane,
+			zFar = m_Cam.farClipPlane,
+			screenWidth = Screen.width,
+			screenHeight = Screen.height,
+			screenOrientation = Screen.orientation
+		};
+
         XRCameraFrame frame;
-        
+
         if (!cameraManager.subsystem.TryGetLatestFrame(cameraParams, out frame))
-        {
-            return;
-        }
+		{
+		    return;
+		}
 
         FritzPoseManager.ProcessPoseAsync(frame.nativePtr);
-
 #else
         var randomPosition = debugPoint;
         randomPosition.x = randomPosition.x * UnityEngine.Random.Range(-0.5f, 0.5f);
