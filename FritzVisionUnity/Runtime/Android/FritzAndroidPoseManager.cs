@@ -36,7 +36,7 @@ public class FritzAndroidPoseManager : MonoBehaviour
         AndroidJavaObject currentActivityObject = playerClass.GetStatic<AndroidJavaObject>("currentActivity");
         AndroidJavaClass fritzCore = new AndroidJavaClass("ai.fritz.core.Fritz");
 
-        fritzCore.CallStatic("configure", currentActivityObject, "4c6e348aedaa40e48b46b0a19ef4e5dd");
+        fritzCore.CallStatic("configure", currentActivityObject);
 		fritzCore.CallStatic("enableModelUpdates", false);
 
 		poseManager = new AndroidJavaObject("ai.fritz.fritzvisionunity.FritzPoseUnityManager");

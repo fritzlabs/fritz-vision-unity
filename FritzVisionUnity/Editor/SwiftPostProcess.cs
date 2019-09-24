@@ -17,7 +17,7 @@ public static class SwiftPostProcess
             var targetGuid = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
 
             proj.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
-            proj.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/FritzVisionUnity/Source/FritzVisionUnity-Bridging-Header.h");
+            proj.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/ai.fritz.vision-unity/Runtime/iOS/Source/FritzVisionUnity-Bridging-Header.h");
             proj.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "FritzVisionUnity-Swift.h");
             proj.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks $(PROJECT_DIR)/lib/$(CONFIGURATION) $(inherited)");
             proj.AddBuildProperty(targetGuid, "FRAMERWORK_SEARCH_PATHS", "$(inherited) $(PROJECT_DIR) $(PROJECT_DIR)/Frameworks");

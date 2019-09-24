@@ -10,7 +10,7 @@ static class FritzConfigurationIMGUIRegister
 
     private static readonly string apiKeyMessage = "To use the Fritz Unity Plugin, you must have a valid Fritz API key for your Bundle ID. Register for a Fritz account below or login to create your app in Fritz";
     private static readonly string fritzSignup = "https://app.fritz.ai/register?utm_campaign=fritzunity&utm_source=unity";
-    private static readonly string fritzLogin = "https://app.fritz.ai?utm_campaign=fritzunity&utm_source=unity";
+    private static readonly string fritzLogin = "https://app.fritz.ai/login?utm_campaign=fritzunity&utm_source=unity";
     // The settings provider lets us add a Fritz configuration to the Project Settings page.
     [SettingsProvider]
     public static SettingsProvider CreateFritzConfigProvider()
@@ -39,11 +39,11 @@ static class FritzConfigurationIMGUIRegister
                 }
                 GUILayout.EndHorizontal();
 
-                string bundleID = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
-                EditorGUILayout.LabelField("Bundle ID", bundleID);
-                EditorGUILayout.PropertyField(settings.FindProperty("iOSAPIKey"), new GUIContent("Fritz iOS API Key"));
+                EditorGUILayout.LabelField("iOS", EditorStyles.boldLabel);
 
-                EditorGUILayout.LabelField("Frameworks", EditorStyles.boldLabel);
+                string bundleID = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
+                EditorGUILayout.LabelField("iOS Bundle ID", bundleID);
+                EditorGUILayout.PropertyField(settings.FindProperty("iOSAPIKey"), new GUIContent("Fritz iOS API Key"));
 
                 EditorGUILayout.PropertyField(settings.FindProperty("sdkVersion"), new GUIContent("SDK Version"));
 
@@ -62,6 +62,14 @@ static class FritzConfigurationIMGUIRegister
                     var element = property.GetArrayElementAtIndex(i);
                     EditorGUILayout.PropertyField(element);
                 }
+
+                // Android Section
+                EditorGUILayout.LabelField("Android", EditorStyles.boldLabel);
+
+                string packageId = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
+                EditorGUILayout.LabelField("Android Application ID", packageId);
+                EditorGUILayout.PropertyField(settings.FindProperty("androidAPIKey"), new GUIContent("Fritz Android API Key"));
+
                 settings.ApplyModifiedProperties();
             },
 
@@ -76,10 +84,13 @@ static class FritzConfigurationIMGUIRegister
 public class FritzConfiguration : ScriptableObject
 {
     public const string k_FritzConfigurationPath =
-        "Assets/Plugins/iOS/FritzVisionUnity/Editor/FritzConfig.asset";
+        "Assets/Plugins/iOS/FritzConfig.asset";
 
     [SerializeField]
     public string iOSAPIKey;
+
+    [SerializeField]
+    public string androidAPIKey;
 
     [SerializeField]
     public string sdkVersion;

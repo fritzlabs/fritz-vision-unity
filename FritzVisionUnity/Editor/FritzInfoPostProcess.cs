@@ -7,6 +7,7 @@ using System.IO;
 public static class FritzInfoPostProcess
 {
 
+    private static string PACKAGE_PATH = "Packages/ai.fritz.vision-unity";
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
@@ -15,9 +16,9 @@ public static class FritzInfoPostProcess
             return;
         }
 
-        string pluginPath = "Plugins/iOS/FritzVisionUnity/Source/";
-        string sourceFolder = Path.Combine(Application.dataPath, pluginPath);
-        string libraryPath = "Libraries/Plugins/iOS/FritzVisionUnity/Source/";
+        string sourcePath = "Runtime/iOS/Source/";
+        string sourceFolder = Path.Combine(PACKAGE_PATH, sourcePath);
+        string libraryPath = "Libraries/ai.fritz.vision-unity/Runtime/iOS/Source/";
         string plistPath = Path.Combine(sourceFolder, "Fritz-Info.plist");
         string xcodePath = Path.Combine(buildPath, libraryPath, "Fritz-Info.plist");
 
@@ -47,7 +48,6 @@ public static class FritzInfoPostProcess
         infoPlist.ReadFromFile(infoPath);
         infoPlist.root.SetString("NSCameraUsageDescription", "For ML Camera Usage");
         File.WriteAllText(infoPath, infoPlist.WriteToString());
-
     }
 
 }

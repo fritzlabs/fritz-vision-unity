@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 
 public class FritziOSPoseManager
 {

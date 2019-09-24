@@ -65,8 +65,9 @@ public class FritzPoseManager
 #if UNITY_IOS
         string message = FritziOSPoseManager.ProcessPose(buffer);
         return ProcessEncodedPoses(message);
-#endif
+#else
         return null;
+#endif
     }
 
     public static void ProcessPoseAsync(IntPtr buffer)
@@ -87,6 +88,8 @@ public class FritzPoseManager
 #if UNITY_ANDROID
         string message = FritzAndroidPoseManager.ProcessImage(cameraImage);
         return ProcessEncodedPoses(message);
+#else
+        return null;
 #endif
     }
 

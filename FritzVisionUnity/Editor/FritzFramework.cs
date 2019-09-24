@@ -15,7 +15,7 @@ public class FritzFramework
     {
         get
         {
-            var frameworkPath = "Assets/Plugins/iOS/FritzVisionUnity/Frameworks";
+            var frameworkPath = "Assets/Plugins/iOS/Frameworks";
             var path = Path.Combine(frameworkPath, name + ".framework");
 
             if (!Directory.Exists(path))

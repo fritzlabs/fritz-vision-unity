@@ -33,7 +33,7 @@ public class DownloadFramework
 
             ExecuteBashCommand(String.Format("unzip -o {0} -d {1}", tempFile, tempDir));
             var result = ExecuteBashCommand(
-                String.Format("cp -R {0}/Frameworks/* {1}", tempDir, "Assets/Plugins/iOS/FritzVisionUnity/Frameworks/")
+                String.Format("cp -R {0}/Frameworks/* {1}", tempDir, "Assets/Plugins/iOS/Frameworks/")
             );
             AssetDatabase.Refresh();
         }
