@@ -1,6 +1,6 @@
 {
   "name": "ai.fritz.vision-unity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Fritz Vision",
   "description": "Integrate mobile ML experiences with Fritz + Unity",
   "unity": "2019.2",
