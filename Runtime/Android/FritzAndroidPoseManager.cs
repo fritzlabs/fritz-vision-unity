@@ -12,23 +12,23 @@ public class FritzAndroidPoseManager : MonoBehaviour
 {
     AndroidJavaClass ajc;
 
-	static AndroidJavaObject poseManager;
-	static bool processing = false;
+    static AndroidJavaObject poseManager;
+    static bool processing = false;
 
-	void Start()
+    void Start()
     {
 
     }
 
     public static bool IsProcessing()
-	{
+    {
 		return processing;
-	}
+    }
 
     public static void SetProcessing()
-	{
-		processing = true;
-	}
+    {
+        processing = true;
+    }
 
     public static void Configure()
     {
@@ -63,21 +63,19 @@ public class FritzAndroidPoseManager : MonoBehaviour
     }
 
     public static string ProcessPoseFromImage(XRCameraImage image)
-	{
+    {
         object[] methodParams = extractYUVFromImage(image);
         string message = poseManager.Call<string>("processPose", methodParams);
         return message;
-	}
+    }
 
-	public static void LogMessage(string message)
-	{
-		poseManager.Call("logMessage", message);
-	}
-
-
-	public static void ProcessPoseFromImageAsync(XRCameraImage image)
+    public static void LogMessage(string message)
     {
+		poseManager.Call("logMessage", message);
+    }
 
+    public static void ProcessPoseFromImageAsync(XRCameraImage image)
+    {
         object[] methodParams = extractYUVFromImage(image);
         poseManager.Call("processPoseAsync", methodParams);
     }
