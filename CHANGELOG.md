@@ -4,6 +4,14 @@
 
 ---
 
+## [1.0.2]
+
+1. Update to use Android SDK version 4.0.1
+
+## [1.0.1]
+
+1. Bug fixes
+
 ## [1.0.0]
 
-1. Update
+1. Add in iOS + Android Support
