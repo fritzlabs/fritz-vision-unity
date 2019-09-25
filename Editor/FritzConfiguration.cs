@@ -84,7 +84,7 @@ static class FritzConfigurationIMGUIRegister
 public class FritzConfiguration : ScriptableObject
 {
     public const string k_FritzConfigurationPath =
-        "Assets/Plugins/iOS/FritzConfig.asset";
+        "Assets/Plugins/FritzConfig.asset";
 
     [SerializeField]
     public string iOSAPIKey;
