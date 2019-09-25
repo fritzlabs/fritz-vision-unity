@@ -62,7 +62,7 @@ public class FritzAndroidPoseManager : MonoBehaviour
         poseManager.Call("setCallbackFunctionTarget", name);
     }
 
-    public static string ProcessImage(XRCameraImage image)
+    public static string ProcessPoseFromImage(XRCameraImage image)
 	{
         object[] methodParams = extractYUVFromImage(image);
         string message = poseManager.Call<string>("processPose", methodParams);
@@ -75,7 +75,7 @@ public class FritzAndroidPoseManager : MonoBehaviour
 	}
 
 
-	public static void ProcessImageAsync(XRCameraImage image)
+	public static void ProcessPoseFromImageAsync(XRCameraImage image)
     {
 
         object[] methodParams = extractYUVFromImage(image);

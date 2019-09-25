@@ -25,6 +25,7 @@ public class FritzPoseManager
 #elif UNITY_ANDROID
         return FritzAndroidPoseManager.Processing();
 #endif
+        return false;
     }
 
     public static void SetNumPoses(int numPoses)
@@ -54,51 +55,53 @@ public class FritzPoseManager
 #endif
     }
 
-    public static List<FritzPose> ProcessPose(IntPtr buffer)
+#if UNITY_IOS
+    public static List<FritzPose> ProcessPose(XRCameraFrame frame)
     {
+        IntPtr buffer = frame.nativePtr;
+
         if (buffer == IntPtr.Zero)
         {
             Debug.LogError("buffer is NULL!");
             return null;
         }
 
-#if UNITY_IOS
+
         string message = FritziOSPoseManager.ProcessPose(buffer);
         return ProcessEncodedPoses(message);
-#else
-        return null;
-#endif
     }
 
-    public static void ProcessPoseAsync(IntPtr buffer)
+    public static void ProcessPoseFromFrame(XRCameraFrame frame)
     {
+        IntPtr buffer = frame.nativePtr;
         if (buffer == IntPtr.Zero)
         {
             Debug.LogError("buffer is NULL!");
             return;
         }
 
-#if UNITY_IOS
+
         FritziOSPoseManager.ProcessPoseAsync(buffer);
-#endif
     }
+#endif
 
-    public static List<FritzPose> ProcessImage(XRCameraImage cameraImage)
-    {
 #if UNITY_ANDROID
-        string message = FritzAndroidPoseManager.ProcessImage(cameraImage);
+    public static List<FritzPose> ProcessPoseFromImage(XRCameraImage cameraImage)
+    {
+        string message = FritzAndroidPoseManager.ProcessPoseFromImage(cameraImage);
         return ProcessEncodedPoses(message);
-#else
-        return null;
-#endif
     }
 
-    public static void ProcessImageAsync(XRCameraImage cameraImage)
+    public static void ProcessPoseFromImageAsync(XRCameraImage cameraImage)
     {
-#if UNITY_ANDROID
-        FritzAndroidPoseManager.ProcessImageAsync(cameraImage);
-#endif
+        FritzAndroidPoseManager.ProcessPoseFromImageAsync(cameraImage);
     }
+
+    public static void LogMessage(string message)
+    {
+        FritzAndroidPoseManager.LogMessage(message);
+    }
+#endif
 
     public static List<FritzPose> ProcessEncodedPoses(string message)
     {
@@ -114,12 +117,5 @@ public class FritzPoseManager
             decoded.Add(new FritzPose(pose));
         }
         return decoded;
-    }
-
-    public static void LogMessage(string message)
-    {
-#if UNITY_ANDROID
-        FritzAndroidPoseManager.LogMessage(message);
-#endif
     }
 }
