@@ -56,7 +56,7 @@ public class FritzPoseManager
     }
 
 #if UNITY_IOS
-    public static List<FritzPose> ProcessPose(XRCameraFrame frame)
+    public static List<FritzPose> ProcessPoseFromFrame(XRCameraFrame frame)
     {
         IntPtr buffer = frame.nativePtr;
 
@@ -71,7 +71,7 @@ public class FritzPoseManager
         return ProcessEncodedPoses(message);
     }
 
-    public static void ProcessPoseFromFrame(XRCameraFrame frame)
+    public static void ProcessPoseFromFrameAsync(XRCameraFrame frame)
     {
         IntPtr buffer = frame.nativePtr;
         if (buffer == IntPtr.Zero)
