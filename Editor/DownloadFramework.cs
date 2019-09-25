@@ -32,6 +32,7 @@ public class DownloadFramework
             client.DownloadFile(new Uri(path), tempFile);
 
             ExecuteBashCommand(String.Format("unzip -o {0} -d {1}", tempFile, tempDir));
+            ExecuteBashCommand(String.Format("mkdir -p Assets/Plugins/iOS/Frameworks/"));
             var result = ExecuteBashCommand(
                 String.Format("cp -R {0}/Frameworks/* {1}", tempDir, "Assets/Plugins/iOS/Frameworks/")
             );
