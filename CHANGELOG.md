@@ -4,6 +4,10 @@
 
 ---
 
+## [1.0.3]
+
+1. Include for iOS
+
 ## [1.0.2]
 
 1. Update to use Android SDK version 4.0.1
